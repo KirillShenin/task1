@@ -194,13 +194,6 @@ class DesktopLayoutState extends State<DesktopLayout> {
                                     : GestureDetector(
                                         onTap: () {
                                           setState(() async {
-                                            String? outputFile =
-                                                await FilePicker.platform
-                                                    .saveFile(
-                                              dialogTitle:
-                                                  'Выберите, куда вы хотите сохранить файл:',
-                                              fileName: '1.txt',
-                                            );
                                           });
                                         },
                                         child: isLoaded

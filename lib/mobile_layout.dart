@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'dart:ffi';
 import 'package:task1/file_extension_bloc.dart';
 import 'package:task1/file_extension_state.dart';
 
@@ -201,12 +199,6 @@ class MobileLayoutState extends State<MobileLayout> {
                               : GestureDetector(
                                   onTap: () {
                                     setState(() async {
-                                      String? outputFile =
-                                          await FilePicker.platform.saveFile(
-                                        dialogTitle:
-                                            'Выберите, куда вы хотите сохранить файл:',
-                                        fileName: '1.txt',
-                                      );
                                     });
                                   },
                                   child: isLoaded
