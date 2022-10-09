@@ -60,7 +60,6 @@ class MobileLayoutState extends State<MobileLayout> {
     super.initState();
   }
 
-
   void openFileExplorer() async {
     setState(() => _loadingPath = true);
     try {
@@ -84,7 +83,7 @@ class MobileLayoutState extends State<MobileLayout> {
       _loadingPath = false;
       print(_paths!.first.extension);
       _fileName =
-      _paths != null ? _paths!.map((e) => e.name).toString() : '...';
+          _paths != null ? _paths!.map((e) => e.name).toString() : '...';
     });
   }
 
@@ -103,8 +102,8 @@ class MobileLayoutState extends State<MobileLayout> {
         theme: CustomTheme.lightTheme,
         home: Scaffold(
             appBar: AppBar(
-              title:
-              const Text("Конвертер файлов", style: TextStyle(fontSize: 25)),
+              title: const Text("Конвертер файлов",
+                  style: TextStyle(fontSize: 25)),
               centerTitle: true,
             ),
             body: SafeArea(
@@ -144,7 +143,7 @@ class MobileLayoutState extends State<MobileLayout> {
                                         : const Text('Выберите файл')),
                                 Padding(
                                   padding:
-                                  const EdgeInsets.fromLTRB(30, 0, 0, 0),
+                                      const EdgeInsets.fromLTRB(30, 0, 0, 0),
                                   child: FloatingActionButton(
                                     //child: Icon(Icons.cloud_download),
                                     onPressed: () {
@@ -160,7 +159,7 @@ class MobileLayoutState extends State<MobileLayout> {
                             Padding(
                               padding: const EdgeInsets.fromLTRB(0, 40, 0, 150),
                               child: BlocBuilder<FileExtensionBloc,
-                                  FileExtensionState>(
+                                      FileExtensionState>(
                                   builder: (context, state) =>
                                       DropdownButton2<String>(
                                         value: dropdownValue,
@@ -186,18 +185,18 @@ class MobileLayoutState extends State<MobileLayout> {
                                         items: list
                                             .map<DropdownMenuItem<String>>(
                                                 (String value) {
-                                              return DropdownMenuItem<String>(
-                                                value: value,
-                                                child: Text(
-                                                  value,
-                                                  style: const TextStyle(
-                                                    fontSize: 25,
-                                                    fontStyle: FontStyle.italic,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                              );
-                                            }).toList(),
+                                          return DropdownMenuItem<String>(
+                                            value: value,
+                                            child: Text(
+                                              value,
+                                              style: const TextStyle(
+                                                fontSize: 25,
+                                                fontStyle: FontStyle.italic,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          );
+                                        }).toList(),
                                       )),
                             ),
                           ],
@@ -213,38 +212,41 @@ class MobileLayoutState extends State<MobileLayout> {
                         child: const Text('Начать конвертацию'),
                       ),
                       Padding(
-                          padding:
-                          const EdgeInsets.symmetric(
+                          padding: const EdgeInsets.symmetric(
                             horizontal: 10,
                             vertical: 30,
                           ),
                           child: loading
                               ? Column(
-                            //mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              const CircularProgressIndicator(),
-                              Text(
-                                  '${(progressValue * 10).round()}%',
-                                  style: const TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 15)),
-                            ],
-                          )
+                                  //mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    const CircularProgressIndicator(),
+                                    Text('${(progressValue * 10).round()}%',
+                                        style: const TextStyle(
+                                            color: Colors.black, fontSize: 15)),
+                                  ],
+                                )
                               : GestureDetector(
-                              onTap: () {
-                                setState(() async {});
-                              },
-                              child: isLoaded
-                                  ? const Text(
-                                  'Нажмите чтобы скачать',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 20))
-                                  : const Text(
-                                  'Перед началом конвертации выберите файл',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 25))))
+                                  onTap: () {
+                                    setState(() async {
+                                      String? outputFile =
+                                          await FilePicker.platform.saveFile(
+                                        dialogTitle:
+                                            'Выберите, куда вы хотите сохранить файл:',
+                                        fileName: '1.txt',
+                                      );
+                                    });
+                                  },
+                                  child: isLoaded
+                                      ? const Text('Нажмите чтобы скачать',
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 20))
+                                      : const Text(
+                                          'Перед началом конвертации выберите файл',
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 25))))
                     ],
                   ),
                 ),

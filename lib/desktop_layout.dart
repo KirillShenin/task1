@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:math';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:task1/file_extension_bloc.dart';
@@ -7,16 +9,16 @@ import 'package:task1/file_extension_state.dart';
 
 import 'package:task1/theme/custom_theme.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 
 List<String> list = <String>[
-  'Файл txt',
-  'Файл docx',
-  'Файл pdf',
-  'Файл doc',
-  'Файл html'
+  'txt',
+  'docx',
+  'pdf',
+  'doc',
+  'html'
 ];
+
 
 class DesktopLayout extends StatefulWidget {
   const DesktopLayout({super.key});
@@ -34,16 +36,16 @@ class DesktopLayoutState extends State<DesktopLayout> {
   bool fileIsLoaded = false;
   int progressValue = 0;
   String? _fileName;
-  List<PlatformFile>? _paths;
+  List<PlatformFile>? files;
   String? _extension;
   bool multiPick = false;
   FileType pickingType = FileType.any;
   String dropdownValue = list.first;
 
-  // ignore: non_constant_identifier_names
-  void CreateNewList(extension) {
+
+  void CreateNewList() {
     for (int increment = 0; increment < list.length; increment++) {
-      if (list[increment] == extension) {
+      if (list[increment] == fileExtension) {
         list.remove(list[increment]);
       }
     }
@@ -58,28 +60,17 @@ class DesktopLayoutState extends State<DesktopLayout> {
   }
 
   void openFileExplorer() async {
-    try {
       fileIsLoaded = true;
-      _paths = (await FilePicker.platform.pickFiles(
-        type: pickingType,
-        allowMultiple: multiPick,
-        allowedExtensions: (_extension?.isNotEmpty ?? false)
-            ? _extension?.replaceAll(' ', '').split(',')
-            : null,
-      ))
-          ?.files;
-    } on PlatformException catch (e) {
-      print("Unsupported operation$e");
-    } catch (ex) {
-      print(ex);
+      FilePickerResult? result = await FilePicker.platform.pickFiles();
+
+      if (result != null) {
+        PlatformFile file = result.files.first;
+        fileExtension= file.extension!;
+        newString = file.name;
+        print(fileExtension);
+      }
     }
-    if (!mounted) return;
-    setState(() {
-      print(_paths!.first.extension);
-      _fileName =
-          _paths != null ? _paths!.map((e) => e.name).toString() : '...';
-    });
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -116,15 +107,13 @@ class DesktopLayoutState extends State<DesktopLayout> {
                               children: <Widget>[
                                 ElevatedButton(
                                     onPressed: () {
-                                      openFileExplorer();
-                                      String newString = '$_fileName';
-                                      found = newString.indexOf('.');
-                                      fileExtension =
-                                          '$_fileName'.substring(found + 1);
-                                      CreateNewList(newString);
+                                      setState(() {
+                                        openFileExplorer();
+                                        CreateNewList();
+                                      });
                                     },
                                     child: fileIsLoaded
-                                        ? Text('$_fileName')
+                                        ? Text(newString)
                                         : const Text('Выберите файл')),
                                 Padding(
                                   padding:
@@ -216,7 +205,15 @@ class DesktopLayoutState extends State<DesktopLayout> {
                                       )
                                     : GestureDetector(
                                         onTap: () {
-                                          setState(() async {});
+                                          setState(() async {
+                                            String? outputFile =
+                                                await FilePicker.platform
+                                                    .saveFile(
+                                              dialogTitle:
+                                                  'Выберите, куда вы хотите сохранить файл:',
+                                              fileName: '1.txt',
+                                            );
+                                          });
                                         },
                                         child: isLoaded
                                             ? const Text(
