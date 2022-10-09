@@ -34,24 +34,19 @@ class MobileLayoutState extends State<MobileLayout> {
   bool isLoaded = false;
   bool fileIsLoaded = false;
   int progressValue = 0;
-  bool _loadingPath = false;
-  String? _fileName;
-  List<PlatformFile>? _paths;
-  String? _directoryPath;
-  String? _extension;
-  bool _multiPick = false;
-  FileType _pickingType = FileType.any;
-  TextEditingController _controller = TextEditingController();
+  List<PlatformFile>? files;
+  bool multiPick = false;
+  FileType pickingType = FileType.any;
   String dropdownValue = list.first;
 
-  void CreateNewList(extension) {
+  @override
+  void CreateNewList() {
     for (int increment = 0; increment < list.length; increment++) {
-      if (list[increment] == extension) {
-        list.remove(list[increment]);
+      if (list[increment] == fileExtension) {
+        list.remove(fileExtension);
       }
     }
   }
-
   @override
   void initState() {
     loading = false;
@@ -61,37 +56,16 @@ class MobileLayoutState extends State<MobileLayout> {
   }
 
   void openFileExplorer() async {
-    setState(() => _loadingPath = true);
-    try {
-      fileIsLoaded = true;
-      _directoryPath = null;
-      _paths = (await FilePicker.platform.pickFiles(
-        type: _pickingType,
-        allowMultiple: _multiPick,
-        allowedExtensions: (_extension?.isNotEmpty ?? false)
-            ? _extension?.replaceAll(' ', '').split(',')
-            : null,
-      ))
-          ?.files;
-    } on PlatformException catch (e) {
-      print("Unsupported operation" + e.toString());
-    } catch (ex) {
-      print(ex);
+    fileIsLoaded = true;
+    FilePickerResult? result = await FilePicker.platform.pickFiles();
+
+    if (result != null) {
+      PlatformFile file = result.files.first;
+      fileExtension = file.extension!;
+      newString = file.name;
     }
-    if (!mounted) return;
-    setState(() {
-      _loadingPath = false;
-      print(_paths!.first.extension);
-      _fileName =
-          _paths != null ? _paths!.map((e) => e.name).toString() : '...';
-    });
   }
 
-  void _selectFolder() {
-    FilePicker.platform.getDirectoryPath().then((value) {
-      setState(() => _directoryPath = value);
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -131,15 +105,13 @@ class MobileLayoutState extends State<MobileLayout> {
                               children: <Widget>[
                                 ElevatedButton(
                                     onPressed: () {
-                                      openFileExplorer();
-                                      String newString = '$_fileName';
-                                      found = newString.indexOf('.');
-                                      fileExtension =
-                                          '$_fileName'.substring(found + 1);
-                                      CreateNewList(newString);
+                                      setState(() {
+                                        openFileExplorer();
+                                        CreateNewList();
+                                      });
                                     },
                                     child: fileIsLoaded
-                                        ? Text('$_fileName')
+                                        ? Text(newString)
                                         : const Text('Выберите файл')),
                                 Padding(
                                   padding:

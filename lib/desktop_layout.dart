@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 import 'dart:math';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -11,14 +10,7 @@ import 'package:task1/theme/custom_theme.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 
-List<String> list = <String>[
-  'txt',
-  'docx',
-  'pdf',
-  'doc',
-  'html'
-];
-
+List<String> list = <String>['txt', 'docx', 'pdf', 'doc', 'html'];
 
 class DesktopLayout extends StatefulWidget {
   const DesktopLayout({super.key});
@@ -35,18 +27,16 @@ class DesktopLayoutState extends State<DesktopLayout> {
   bool isLoaded = false;
   bool fileIsLoaded = false;
   int progressValue = 0;
-  String? _fileName;
   List<PlatformFile>? files;
-  String? _extension;
   bool multiPick = false;
   FileType pickingType = FileType.any;
   String dropdownValue = list.first;
 
-
+  @override
   void CreateNewList() {
     for (int increment = 0; increment < list.length; increment++) {
       if (list[increment] == fileExtension) {
-        list.remove(list[increment]);
+        list.remove(fileExtension);
       }
     }
   }
@@ -60,17 +50,15 @@ class DesktopLayoutState extends State<DesktopLayout> {
   }
 
   void openFileExplorer() async {
-      fileIsLoaded = true;
-      FilePickerResult? result = await FilePicker.platform.pickFiles();
+    fileIsLoaded = true;
+    FilePickerResult? result = await FilePicker.platform.pickFiles();
 
-      if (result != null) {
-        PlatformFile file = result.files.first;
-        fileExtension= file.extension!;
-        newString = file.name;
-        print(fileExtension);
-      }
+    if (result != null) {
+      PlatformFile file = result.files.first;
+      fileExtension = file.extension!;
+      newString = file.name;
     }
-
+  }
 
   @override
   Widget build(BuildContext context) {
