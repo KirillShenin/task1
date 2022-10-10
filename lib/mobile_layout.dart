@@ -37,7 +37,7 @@ class MobileLayoutState extends State<MobileLayout> {
   FileType pickingType = FileType.any;
   String dropdownValue = list.first;
 
-  @override
+  // ignore: non_constant_identifier_names
   void CreateNewList() {
     for (int increment = 0; increment < list.length; increment++) {
       if (list[increment] == fileExtension) {
@@ -45,6 +45,7 @@ class MobileLayoutState extends State<MobileLayout> {
       }
     }
   }
+
   @override
   void initState() {
     loading = false;
@@ -63,7 +64,6 @@ class MobileLayoutState extends State<MobileLayout> {
       newString = file.name;
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -198,8 +198,7 @@ class MobileLayoutState extends State<MobileLayout> {
                                 )
                               : GestureDetector(
                                   onTap: () {
-                                    setState(() async {
-                                    });
+                                    setState(() async {});
                                   },
                                   child: isLoaded
                                       ? const Text('Нажмите чтобы скачать',

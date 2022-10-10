@@ -1,22 +1,21 @@
+// ignore_for_file: avoid_print, unused_element
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+// ignore: use_key_in_widget_constructors
 class FilePickerDemo extends StatefulWidget {
   @override
   FilePickerDemoState createState() => FilePickerDemoState();
 }
 
 class FilePickerDemoState extends State<FilePickerDemo> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  String? _fileName;
   List<PlatformFile>? files;
-  String? _directoryPath;
   String? _extension;
-  bool _loadingPath = false;
-  bool _multiPick = false;
-  FileType _pickingType = FileType.any;
-  TextEditingController _controller = TextEditingController();
+  final _multiPick = false;
+  final FileType _pickingType = FileType.any;
+  final TextEditingController _controller = TextEditingController();
 
   @override
   void initState() {
@@ -25,9 +24,7 @@ class FilePickerDemoState extends State<FilePickerDemo> {
   }
 
   void openFileExplorer() async {
-    setState(() => _loadingPath = true);
     try {
-      _directoryPath = null;
       files = (await FilePicker.platform.pickFiles(
         type: _pickingType,
         allowMultiple: _multiPick,
@@ -37,42 +34,22 @@ class FilePickerDemoState extends State<FilePickerDemo> {
       ))
           ?.files;
     } on PlatformException catch (e) {
-      print("Unsupported operation" + e.toString());
+      print("Unsupported operation$e");
     } catch (ex) {
       print(ex);
     }
     if (!mounted) return;
     setState(() {
-      _loadingPath = false;
       print(files!.first.extension);
-      _fileName =
-      files != null ? files!.map((e) => e.name).toString() : '...';
-    });
-  }
-
-  void _clearCachedFiles() {
-    FilePicker.platform.clearTemporaryFiles().then((result) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: result! ? Colors.green : Colors.red,
-          content: Text((result
-              ? 'Temporary files removed with success.'
-              : 'Failed to clean temporary files')),
-        ),
-      );
     });
   }
 
   void _selectFolder() {
-    FilePicker.platform.getDirectoryPath().then((value) {
-      setState(() => _directoryPath = value);
-    });
+    FilePicker.platform.getDirectoryPath().then((value) {});
   }
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     throw UnimplementedError();
   }
-
 }

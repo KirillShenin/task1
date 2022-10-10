@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:math';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:task1/file_extension_bloc.dart';
 import 'package:task1/file_extension_state.dart';
 
@@ -32,7 +31,7 @@ class DesktopLayoutState extends State<DesktopLayout> {
   FileType pickingType = FileType.any;
   String dropdownValue = list.first;
 
-  @override
+  // ignore: non_constant_identifier_names
   void CreateNewList() {
     for (int increment = 0; increment < list.length; increment++) {
       if (list[increment] == fileExtension) {
@@ -193,8 +192,7 @@ class DesktopLayoutState extends State<DesktopLayout> {
                                       )
                                     : GestureDetector(
                                         onTap: () {
-                                          setState(() async {
-                                          });
+                                          setState(() async {});
                                         },
                                         child: isLoaded
                                             ? const Text(
